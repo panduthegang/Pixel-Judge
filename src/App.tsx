@@ -7,7 +7,7 @@ import { Testimonials } from './components/Testimonials';
 import { Manifesto } from './components/Manifesto';
 import { Ticker } from './components/Ticker';
 import { Footer } from './components/Footer';
-import { JudgePage } from './components/JudgePage';
+import { JudgePageLayout } from './pages/JudgePageLayout';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'judge'>('home');
@@ -16,18 +16,22 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-vintage-cream font-mono selection:bg-vintage-red selection:text-white overflow-x-hidden">
       <Navbar onNavigate={setCurrentPage} currentPage={currentPage} />
       {currentPage === 'home' ? (
-        <main className="flex-grow flex flex-col w-full">
-          <Hero onGetJudged={() => setCurrentPage('judge')} />
-          <Ticker />
-          <Manifesto />
-          <Features />
-          <HowItWorks />
-          <Testimonials />
-        </main>
+        <>
+          <main className="flex-grow flex flex-col w-full">
+            <Hero onGetJudged={() => setCurrentPage('judge')} />
+            <Ticker />
+            <Manifesto />
+            <Features />
+            <HowItWorks />
+            <Testimonials />
+          </main>
+          <Footer />
+        </>
       ) : (
-        <JudgePage />
+        <main className="flex-grow">
+          <JudgePageLayout />
+        </main>
       )}
-      <Footer />
     </div>
   );
 }

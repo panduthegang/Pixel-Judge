@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <title>PixelJudge Logo - The Analyzing Eye</title>
+    <path d="M50 25C30 25 12.5 37.5 5 50C12.5 62.5 30 75 50 75C70 75 87.5 62.5 95 50C87.5 37.5 70 25 50 25Z" stroke="#3182CE" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <path d="M65 65L75 75" stroke="#2B6CB0" stroke-width="6" stroke-linecap="round"/>
+    
+    <circle cx="50" cy="50" r="18" stroke="#3182CE" stroke-width="4" fill="white"/>
+    
+    <rect x="40" y="40" width="8" height="8" fill="#63B3ED"/>
+    <rect x="52" y="40" width="8" height="8" fill="#63B3ED" opacity="0.5"/>
+    <rect x="40" y="52" width="8" height="8" fill="#63B3ED" opacity="0.5"/>
+    <rect x="52" y="52" width="8" height="8" fill="#63B3ED"/>
+</svg>

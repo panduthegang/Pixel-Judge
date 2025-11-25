@@ -407,40 +407,40 @@ export const CaseStudiesPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="w-full bg-vintage-charcoal text-vintage-cream py-20 px-8 md:px-12 border-t-2 border-vintage-border">
+        <section className="w-full bg-vintage-cream py-20 px-8 md:px-12 border-t-2 border-vintage-border">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="font-serif text-5xl md:text-6xl font-black mb-6 tracking-tight">
+              <h2 className="font-serif text-5xl md:text-6xl font-black mb-6 tracking-tight text-vintage-charcoal">
                 Ready to Build?
               </h2>
-              <p className="font-mono text-lg text-vintage-cream/80 max-w-2xl mx-auto">
+              <p className="font-mono text-lg text-vintage-charcoal/80 max-w-2xl mx-auto">
                 You now have the complete toolkit for AI-powered development. Start with these fundamentals and iterate. Remember: every shipped project beats perfect unreleased code.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="border-2 border-vintage-gold p-8 bg-vintage-charcoal/50 hover:bg-vintage-charcoal/80 transition-colors shadow-retro">
-                <div className="font-serif text-3xl font-bold text-vintage-gold mb-4">1</div>
-                <h3 className="font-serif text-xl font-bold mb-3 text-vintage-cream">Master Your Prompts</h3>
-                <p className="font-mono text-sm text-vintage-cream/80">Be specific, layer context, use references. The better your prompt, the better your results. Practice makes perfect.</p>
+              <div className="border-2 border-vintage-border p-8 bg-white hover:bg-vintage-paper transition-colors shadow-retro">
+                <div className="font-serif text-3xl font-bold text-vintage-red mb-4">1</div>
+                <h3 className="font-serif text-xl font-bold mb-3 text-vintage-charcoal">Master Your Prompts</h3>
+                <p className="font-mono text-sm text-vintage-charcoal/80">Be specific, layer context, use references. The better your prompt, the better your results. Practice makes perfect.</p>
               </div>
 
-              <div className="border-2 border-vintage-gold p-8 bg-vintage-charcoal/50 hover:bg-vintage-charcoal/80 transition-colors shadow-retro">
-                <div className="font-serif text-3xl font-bold text-vintage-gold mb-4">2</div>
-                <h3 className="font-serif text-xl font-bold mb-3 text-vintage-cream">Debug Fearlessly</h3>
-                <p className="font-mono text-sm text-vintage-cream/80">Use your browser tools. Isolate problems methodically. Every bug solved teaches you something valuable about your code.</p>
+              <div className="border-2 border-vintage-border p-8 bg-white hover:bg-vintage-paper transition-colors shadow-retro">
+                <div className="font-serif text-3xl font-bold text-vintage-red mb-4">2</div>
+                <h3 className="font-serif text-xl font-bold mb-3 text-vintage-charcoal">Debug Fearlessly</h3>
+                <p className="font-mono text-sm text-vintage-charcoal/80">Use your browser tools. Isolate problems methodically. Every bug solved teaches you something valuable about your code.</p>
               </div>
 
-              <div className="border-2 border-vintage-gold p-8 bg-vintage-charcoal/50 hover:bg-vintage-charcoal/80 transition-colors shadow-retro">
-                <div className="font-serif text-3xl font-bold text-vintage-gold mb-4">3</div>
-                <h3 className="font-serif text-xl font-bold mb-3 text-vintage-cream">Ship Early</h3>
-                <p className="font-mono text-sm text-vintage-cream/80">Don't wait for perfection. Deploy today, refine tomorrow. Real user feedback beats perfect planning every time.</p>
+              <div className="border-2 border-vintage-border p-8 bg-white hover:bg-vintage-paper transition-colors shadow-retro">
+                <div className="font-serif text-3xl font-bold text-vintage-red mb-4">3</div>
+                <h3 className="font-serif text-xl font-bold mb-3 text-vintage-charcoal">Ship Early</h3>
+                <p className="font-mono text-sm text-vintage-charcoal/80">Don't wait for perfection. Deploy today, refine tomorrow. Real user feedback beats perfect planning every time.</p>
               </div>
             </div>
 
-            <div className="mt-16 p-12 bg-vintage-red border-2 border-vintage-border shadow-retro text-center">
-              <p className="font-serif text-3xl font-bold mb-4 text-vintage-cream">Your next project starts now.</p>
-              <p className="font-mono text-vintage-cream/90">Apply these principles. Build something. Ship it. Learn from it. Repeat.</p>
+            <div className="mt-16 p-12 bg-vintage-gold border-2 border-vintage-border shadow-retro text-center">
+              <p className="font-serif text-3xl font-bold mb-4 text-vintage-charcoal">Your next project starts now.</p>
+              <p className="font-mono text-vintage-charcoal/90">Apply these principles. Build something. Ship it. Learn from it. Repeat.</p>
             </div>
           </div>
         </section>

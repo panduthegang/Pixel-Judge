@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
         <div className="col-span-1 md:col-span-2">
           <h2 className="font-serif text-4xl font-bold mb-6">PixelJudge</h2>
           <p className="font-mono text-sm opacity-60 max-w-md leading-relaxed">
-            Est. 2024. Dedicated to the eradication of bad design through superior intelligence and harsh judgment. We don't just correct errors; we instill character.
+            Est. 2025. Dedicated to the eradication of bad design through superior intelligence and harsh judgment. We don't just correct errors; we instill character.
           </p>
         </div>
         
@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
       </div>
       
       <div className="w-full px-6 md:px-12 mt-16 pt-8 border-t border-vintage-paper/10 flex flex-col md:flex-row justify-between items-center font-mono text-xs opacity-40">
-        <p>© 2024 PixelJudge Inc. All rights reserved.</p>
+        <p>© 2025 PixelJudge Inc. All rights reserved.</p>
         <p>Crafted with malice & love.</p>
       </div>
     </footer>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, FileImage, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, FileImage, AlertCircle, Loader2, FileText } from 'lucide-react';
 import { VintageButton } from '../components/ui/VintageButton';
 import { ToggleSwitch } from '../components/ui/ToggleSwitch';
 import ReactMarkdown from 'react-markdown';
@@ -7,12 +7,15 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 type Mode = 'review' | 'prompt';
 type PromptType = 'ui' | 'xml';
+type InputType = 'image' | 'text';
 
 export const JudgePageLayout: React.FC = () => {
   const [mode, setMode] = useState<Mode>('review');
   const [promptType, setPromptType] = useState<PromptType>('ui');
+  const [inputType, setInputType] = useState<InputType>('image');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [textInput, setTextInput] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -56,8 +59,13 @@ export const JudgePageLayout: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedFile) {
+    if (inputType === 'image' && !selectedFile) {
       setError('Please select an image first');
+      return;
+    }
+
+    if (inputType === 'text' && !textInput.trim()) {
+      setError('Please enter a description');
       return;
     }
 
@@ -75,12 +83,121 @@ export const JudgePageLayout: React.FC = () => {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
+      if (inputType === 'text') {
+        let promptText = '';
+
+        if (promptType === 'ui') {
+          promptText = `You are PixelJudge, an expert at translating text descriptions into detailed UI generation prompts for tools like Figma AI or Midjourney.
+
+The user has described their vision:
+"${textInput}"
+
+Create a comprehensive prompt that can be used to generate a high-fidelity, polished UI design.
+
+Format the output in Markdown with clear sections and structure. Include:
+
+## Layout Structure
+Describe the grid system and overall layout
+
+## Component Hierarchy
+List and describe each component
+
+## Color Palette
+Suggest colors (avoid purple/indigo unless present)
+
+## Typography
+Specify font styles, sizes, and weights
+
+## Spacing & Padding
+Detail spacing specifications
+
+## Interactive Elements
+Describe states and interactions
+
+## Design Style
+Define the aesthetic approach
+
+## Final Prompt
+Provide a single, detailed prompt ready to paste into an AI image generator.
+
+Use proper Markdown formatting throughout.`;
+        } else {
+          promptText = `You are PixelJudge, an expert at translating text descriptions into structured XML format for development tools like Bolt.new, Claude, or Lovable.
+
+The user has described their vision:
+"${textInput}"
+
+CRITICAL: Output MUST be in pure XML format, NOT JSX or React code.
+
+Create a detailed XML structure document. Format the output in Markdown with clear sections:
+
+## XML Structure Overview
+Brief description of the XML document structure
+
+## Complete XML Code
+Provide the FULL XML structure using proper XML syntax:
+- Use XML tags like <component>, <layout>, <element>, <style>, <interaction>
+- Use XML attributes for properties
+- Properly nest elements
+- Include XML comments where helpful
+- Use CDATA sections for complex content if needed
+
+Example XML structure:
+\`\`\`xml
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <layout type="grid" columns="12">
+    <component name="header" position="top">
+      <element type="navigation">
+        <item>Home</item>
+        <item>About</item>
+      </element>
+    </component>
+  </layout>
+</interface>
+\`\`\`
+
+## Component Definitions
+List each component with XML tag definitions
+
+## Styling Specifications
+Define CSS/Tailwind classes as XML attributes or nested style elements
+
+## Interaction Definitions
+Define event handlers and behaviors in XML format
+
+## Implementation Notes
+Technical notes for converting this XML to actual code
+
+Output MUST be valid XML format, not JSX or React code.`;
+        }
+
+        try {
+          const result = await model.generateContent(promptText);
+          const response = await result.response;
+          const text = response.text();
+
+          if (text) {
+            setResult(text);
+          } else {
+            throw new Error('No response generated');
+          }
+        } catch (err) {
+          console.error('API Error:', err);
+          setError(err instanceof Error ? err.message : 'Failed to generate prompt');
+        } finally {
+          setLoading(false);
+        }
+
+        return;
+      }
+
       const reader = new FileReader();
 
       reader.onload = async () => {
         try {
           const base64Data = (reader.result as string).split(',')[1];
-          const mimeType = selectedFile.type;
+          const mimeType = selectedFile!.type;
 
           let promptText = '';
 
@@ -128,37 +245,53 @@ Provide a single, detailed prompt ready to paste into an AI image generator.
 
 Use proper Markdown formatting throughout.`;
             } else {
-              promptText = `You are PixelJudge, an expert at translating wireframes into structured XML/code prompts for development tools like Bolt.new, Claude, or Lovable.
+              promptText = `You are PixelJudge, an expert at translating wireframes into structured XML format for development tools like Bolt.new, Claude, or Lovable.
 
-Analyze this wireframe/design and create a detailed technical prompt.
+Analyze this wireframe/design and create a detailed XML structure document.
+
+CRITICAL: Output MUST be in pure XML format, NOT JSX or React code.
 
 Format the output in Markdown with clear sections:
 
-## Component Structure
-Describe the component hierarchy
+## XML Structure Overview
+Brief description of the XML document structure based on the wireframe
 
-## Layout Specifications
-Detail flexbox, grid, or other layout approaches
+## Complete XML Code
+Provide the FULL XML structure using proper XML syntax:
+- Use XML tags like <component>, <layout>, <element>, <style>, <interaction>
+- Use XML attributes for properties
+- Properly nest elements
+- Include XML comments where helpful
+- Use CDATA sections for complex content if needed
 
-## Styling Approach
-Specify Tailwind CSS classes or CSS approach
+Example XML structure:
+\`\`\`xml
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <layout type="grid" columns="12">
+    <component name="header" position="top">
+      <element type="navigation">
+        <item>Home</item>
+        <item>About</item>
+      </element>
+    </component>
+  </layout>
+</interface>
+\`\`\`
 
-## Interactive Behavior
-Describe user interactions and states
+## Component Definitions
+List each component with XML tag definitions
 
-## Responsive Design
-Outline breakpoints and mobile considerations
+## Styling Specifications
+Define CSS/Tailwind classes as XML attributes or nested style elements
 
-## Accessibility
-List ARIA labels and accessibility requirements
+## Interaction Definitions
+Define event handlers and behaviors in XML format
 
-## State Management
-Describe state needs and data flow
+## Implementation Notes
+Technical notes for converting this XML to actual code
 
-## Implementation Prompt
-Provide a complete, structured prompt that a developer or AI coding assistant can use to build the interface.
-
-Use proper Markdown formatting throughout.`;
+Output MUST be valid XML format, not JSX or React code.`;
             }
           }
 
@@ -193,7 +326,7 @@ Use proper Markdown formatting throughout.`;
         setLoading(false);
       };
 
-      reader.readAsDataURL(selectedFile);
+      reader.readAsDataURL(selectedFile!);
     } catch (err) {
       console.error('Error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -213,7 +346,7 @@ Use proper Markdown formatting throughout.`;
           </p>
         </div>
 
-        <div className="mb-8 flex justify-center">
+        <div className="mb-8 flex flex-col items-center gap-6">
           <ToggleSwitch
             value={mode}
             onChange={(newMode) => {
@@ -225,6 +358,21 @@ Use proper Markdown formatting throughout.`;
               { value: 'prompt', label: 'Prompt Generation' }
             ]}
           />
+
+          {mode === 'prompt' && (
+            <ToggleSwitch
+              value={inputType}
+              onChange={(newType) => {
+                setInputType(newType);
+                setResult(null);
+                setError(null);
+              }}
+              options={[
+                { value: 'image', label: 'Image Upload' },
+                { value: 'text', label: 'Text Description' }
+              ]}
+            />
+          )}
         </div>
 
         {mode === 'prompt' && (
@@ -255,54 +403,74 @@ Use proper Markdown formatting throughout.`;
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" style={{ gridAutoRows: 'minmax(0, 1fr)' }}>
           <div className="border-2 border-vintage-border bg-white p-8 shadow-retro flex flex-col">
             <h2 className="font-serif text-2xl font-bold mb-6 text-vintage-charcoal">
-              Upload Wireframe
+              {inputType === 'image' ? 'Upload Wireframe' : 'Describe Your Vision'}
             </h2>
 
-            <div
-              className={`border-2 border-dashed p-12 text-center transition-all cursor-pointer ${
-                isDragging
-                  ? 'border-vintage-red bg-vintage-red/10 border-solid'
-                  : 'border-vintage-border/50 hover:border-vintage-border bg-vintage-paper/30'
-              }`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-                id="file-upload"
-              />
-              <label htmlFor="file-upload" className="cursor-pointer block">
-                {previewUrl ? (
-                  <div>
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="max-h-64 mx-auto mb-4 border-2 border-vintage-border shadow-retro"
-                    />
-                    <p className="font-mono text-sm text-vintage-charcoal/60">
-                      {selectedFile?.name}
-                    </p>
-                    <p className="font-mono text-xs text-vintage-charcoal/40 mt-2">
-                      Click or drop to replace
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <FileImage className="w-16 h-16 mx-auto mb-4 text-vintage-charcoal/40" />
-                    <p className="font-mono text-sm text-vintage-charcoal/60 mb-2">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="font-mono text-xs text-vintage-charcoal/40">
-                      PNG, JPG, WEBP up to 10MB
-                    </p>
-                  </div>
-                )}
-              </label>
-            </div>
+            {inputType === 'image' ? (
+              <div
+                className={`border-2 border-dashed p-12 text-center transition-all cursor-pointer ${
+                  isDragging
+                    ? 'border-vintage-red bg-vintage-red/10 border-solid'
+                    : 'border-vintage-border/50 hover:border-vintage-border bg-vintage-paper/30'
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="file-upload"
+                />
+                <label htmlFor="file-upload" className="cursor-pointer block">
+                  {previewUrl ? (
+                    <div>
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="max-h-64 mx-auto mb-4 border-2 border-vintage-border shadow-retro"
+                      />
+                      <p className="font-mono text-sm text-vintage-charcoal/60">
+                        {selectedFile?.name}
+                      </p>
+                      <p className="font-mono text-xs text-vintage-charcoal/40 mt-2">
+                        Click or drop to replace
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <FileImage className="w-16 h-16 mx-auto mb-4 text-vintage-charcoal/40" />
+                      <p className="font-mono text-sm text-vintage-charcoal/60 mb-2">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="font-mono text-xs text-vintage-charcoal/40">
+                        PNG, JPG, WEBP up to 10MB
+                      </p>
+                    </div>
+                  )}
+                </label>
+              </div>
+            ) : (
+              <div className="border-2 border-vintage-border/50 bg-vintage-paper/30 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <FileText className="w-6 h-6 text-vintage-charcoal/40" />
+                  <p className="font-mono text-sm text-vintage-charcoal/60">
+                    Describe the components and layout you envision
+                  </p>
+                </div>
+                <textarea
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  placeholder="Example: I want a dashboard with a sidebar on the left containing navigation items, a header with a search bar and user profile, and a main content area with cards displaying metrics like revenue, users, and conversion rate..."
+                  className="w-full h-80 p-4 border-2 border-vintage-border font-mono text-sm text-vintage-charcoal bg-white resize-none focus:outline-none focus:border-vintage-red transition-colors"
+                />
+                <p className="font-mono text-xs text-vintage-charcoal/40 mt-3">
+                  Be specific about layout, components, interactions, and style preferences
+                </p>
+              </div>
+            )}
 
             {error && (
               <div className="mt-4 p-4 bg-vintage-red/10 border-2 border-vintage-red flex items-start gap-3">
@@ -314,17 +482,17 @@ Use proper Markdown formatting throughout.`;
             <VintageButton
               variant="primary"
               onClick={handleSubmit}
-              disabled={!selectedFile || loading}
+              disabled={(inputType === 'image' && !selectedFile) || (inputType === 'text' && !textInput.trim()) || loading}
               className="w-full mt-6 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Analyzing...
+                  {inputType === 'text' ? 'Generating...' : 'Analyzing...'}
                 </>
               ) : (
                 <>
-                  <Upload className="w-4 h-4" />
+                  {inputType === 'image' ? <Upload className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
                   {mode === 'review' ? 'Get Judged' : 'Generate Prompt'}
                 </>
               )}
@@ -342,7 +510,7 @@ Use proper Markdown formatting throughout.`;
                   <Loader2 className="w-8 h-8 animate-spin text-vintage-charcoal/40" />
                 </div>
               ) : result ? (
-                <div className="prose prose-sm max-w-none prose-headings:font-serif prose-headings:font-bold prose-headings:text-vintage-charcoal prose-p:font-mono prose-p:text-vintage-charcoal/80 prose-strong:text-vintage-red prose-ul:font-mono prose-li:text-vintage-charcoal/80">
+                <div className="prose prose-sm max-w-none prose-headings:font-serif prose-headings:font-bold prose-headings:text-vintage-charcoal prose-p:font-mono prose-p:text-vintage-charcoal/80 prose-strong:text-vintage-red prose-ul:font-mono prose-li:text-vintage-charcoal/80 prose-code:font-mono prose-code:text-vintage-charcoal prose-code:bg-vintage-paper">
                   <ReactMarkdown>{result}</ReactMarkdown>
                 </div>
               ) : (
@@ -350,6 +518,8 @@ Use proper Markdown formatting throughout.`;
                   <p className="text-center">
                     {mode === 'review'
                       ? 'The Judge awaits your submission...'
+                      : inputType === 'text'
+                      ? 'Your generated prompt will appear here...'
                       : 'Your prompt will appear here...'}
                   </p>
                 </div>

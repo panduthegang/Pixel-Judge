@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { VintageButton } from './ui/VintageButton';
 import { Menu, X } from 'lucide-react';
 
-interface NavbarProps {
-  onNavigate: (page: 'home' | 'judge') => void;
-  currentPage: 'home' | 'judge';
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
+export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPage = location.pathname === '/' ? 'home' : 'judge';
 
   const handleNavClick = (page: 'home' | 'judge') => {
-    onNavigate(page);
+    navigate(page === 'home' ? '/' : '/judge');
     setIsOpen(false);
   };
 
@@ -43,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
                 onClick={() => handleNavClick('home')}
                 className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm"
               >
-                Back to Home
+                Home
               </button>
             )}
             <VintageButton variant="primary" className="ml-4" onClick={() => handleNavClick('judge')}>

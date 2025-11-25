@@ -2,7 +2,11 @@ import React from 'react';
 import { VintageButton } from './ui/VintageButton';
 import { ArrowRight } from 'lucide-react';
 
-export const Hero: React.FC = () => {
+interface HeroProps {
+  onGetJudged: () => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onGetJudged }) => {
   return (
     <section className="w-full bg-vintage-cream pt-20 pb-24 px-4 relative overflow-hidden border-b-2 border-vintage-border">
       <div className="absolute top-10 right-10 opacity-10 pointer-events-none">
@@ -28,7 +32,7 @@ export const Hero: React.FC = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <VintageButton variant="primary" className="text-lg px-8 py-4 flex items-center gap-2">
+          <VintageButton variant="primary" className="text-lg px-8 py-4 flex items-center gap-2" onClick={onGetJudged}>
             Upload Wireframe <ArrowRight size={18} />
           </VintageButton>
           <VintageButton variant="outline" className="text-lg px-8 py-4 bg-vintage-cream">

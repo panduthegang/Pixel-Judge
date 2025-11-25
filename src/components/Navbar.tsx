@@ -2,27 +2,51 @@ import React, { useState } from 'react';
 import { VintageButton } from './ui/VintageButton';
 import { Menu, X } from 'lucide-react';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onNavigate: (page: 'home' | 'judge') => void;
+  currentPage: 'home' | 'judge';
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleNavClick = (page: 'home' | 'judge') => {
+    onNavigate(page);
+    setIsOpen(false);
+  };
 
   return (
     <nav className="w-full border-b-2 border-vintage-border bg-vintage-cream sticky top-0 z-50">
       <div className="w-full px-6 lg:px-12">
         <div className="flex justify-between items-center h-20">
-          <div className="flex-shrink-0 flex items-center gap-3">
+          <button
+            onClick={() => handleNavClick('home')}
+            className="flex-shrink-0 flex items-center gap-3 hover:opacity-80 transition-opacity"
+          >
             <div className="w-10 h-10 bg-vintage-charcoal flex items-center justify-center text-vintage-cream font-serif text-2xl font-black border-2 border-vintage-border">
               P
             </div>
             <span className="font-serif text-2xl font-bold tracking-tighter text-vintage-charcoal">
               PixelJudge
             </span>
-          </div>
-          
+          </button>
+
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Features</a>
-            <a href="#process" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Process</a>
-            <a href="#testimonials" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Testimony</a>
-            <VintageButton variant="primary" className="ml-4">
+            {currentPage === 'home' ? (
+              <>
+                <a href="#features" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Features</a>
+                <a href="#process" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Process</a>
+                <a href="#testimonials" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Testimony</a>
+              </>
+            ) : (
+              <button
+                onClick={() => handleNavClick('home')}
+                className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm"
+              >
+                Back to Home
+              </button>
+            )}
+            <VintageButton variant="primary" className="ml-4" onClick={() => handleNavClick('judge')}>
               Get Judged
             </VintageButton>
           </div>
@@ -38,10 +62,21 @@ export const Navbar: React.FC = () => {
       {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden border-t-2 border-vintage-border bg-vintage-paper p-4 flex flex-col space-y-4">
-          <a href="#features" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Features</a>
-          <a href="#process" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Process</a>
-          <a href="#testimonials" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Testimony</a>
-          <VintageButton variant="primary" className="w-full">
+          {currentPage === 'home' ? (
+            <>
+              <a href="#features" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Features</a>
+              <a href="#process" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Process</a>
+              <a href="#testimonials" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Testimony</a>
+            </>
+          ) : (
+            <button
+              onClick={() => handleNavClick('home')}
+              className="block text-vintage-charcoal font-bold font-mono uppercase text-left"
+            >
+              Back to Home
+            </button>
+          )}
+          <VintageButton variant="primary" className="w-full" onClick={() => handleNavClick('judge')}>
             Get Judged
           </VintageButton>
         </div>

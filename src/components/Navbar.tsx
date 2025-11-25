@@ -7,10 +7,10 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const currentPage = location.pathname === '/' ? 'home' : 'judge';
+  const currentPage = location.pathname === '/' ? 'home' : location.pathname === '/case-studies' ? 'case-studies' : 'judge';
 
-  const handleNavClick = (page: 'home' | 'judge') => {
-    navigate(page === 'home' ? '/' : '/judge');
+  const handleNavClick = (page: 'home' | 'judge' | 'case-studies') => {
+    navigate(page === 'home' ? '/' : page === 'case-studies' ? '/case-studies' : '/judge');
     setIsOpen(false);
   };
 
@@ -36,14 +36,25 @@ export const Navbar: React.FC = () => {
                 <a href="#features" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Features</a>
                 <a href="#process" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Process</a>
                 <a href="#testimonials" className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Testimony</a>
+                <button onClick={() => handleNavClick('case-studies')} className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm">Case Studies</button>
               </>
             ) : (
-              <button
-                onClick={() => handleNavClick('home')}
-                className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm"
-              >
-                Home
-              </button>
+              <>
+                <button
+                  onClick={() => handleNavClick('home')}
+                  className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm"
+                >
+                  Home
+                </button>
+                {currentPage !== 'case-studies' && (
+                  <button
+                    onClick={() => handleNavClick('case-studies')}
+                    className="text-vintage-charcoal hover:underline decoration-2 underline-offset-4 font-mono uppercase text-sm"
+                  >
+                    Case Studies
+                  </button>
+                )}
+              </>
             )}
             <VintageButton variant="primary" className="ml-4" onClick={() => handleNavClick('judge')}>
               Get Judged
@@ -66,14 +77,25 @@ export const Navbar: React.FC = () => {
               <a href="#features" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Features</a>
               <a href="#process" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Process</a>
               <a href="#testimonials" className="block text-vintage-charcoal font-bold font-mono uppercase" onClick={() => setIsOpen(false)}>Testimony</a>
+              <button onClick={() => handleNavClick('case-studies')} className="block text-vintage-charcoal font-bold font-mono uppercase text-left">Case Studies</button>
             </>
           ) : (
-            <button
-              onClick={() => handleNavClick('home')}
-              className="block text-vintage-charcoal font-bold font-mono uppercase text-left"
-            >
-              Back to Home
-            </button>
+            <>
+              <button
+                onClick={() => handleNavClick('home')}
+                className="block text-vintage-charcoal font-bold font-mono uppercase text-left"
+              >
+                Home
+              </button>
+              {currentPage !== 'case-studies' && (
+                <button
+                  onClick={() => handleNavClick('case-studies')}
+                  className="block text-vintage-charcoal font-bold font-mono uppercase text-left"
+                >
+                  Case Studies
+                </button>
+              )}
+            </>
           )}
           <VintageButton variant="primary" className="w-full" onClick={() => handleNavClick('judge')}>
             Get Judged

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { LandingPage } from './pages/LandingPage';
 import { JudgePageLayout } from './pages/JudgePageLayout';
+import { CaseStudiesPage } from './pages/CaseStudiesPage';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/judge" element={<JudgePageLayout />} />
+          <Route path="/case-studies" element={<CaseStudiesPage />} />
         </Routes>
       </div>
     </BrowserRouter>

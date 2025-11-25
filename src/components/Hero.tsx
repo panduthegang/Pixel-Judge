@@ -35,7 +35,7 @@ export const Hero: React.FC<HeroProps> = ({ onGetJudged }) => {
           <VintageButton variant="primary" className="text-lg px-8 py-4 flex items-center gap-2" onClick={onGetJudged}>
             Upload Wireframe <ArrowRight size={18} />
           </VintageButton>
-          <VintageButton variant="outline" className="text-lg px-8 py-4 bg-vintage-cream">
+          <VintageButton variant="outline" className="text-lg px-8 py-4 bg-vintage-cream" onClick={() => window.location.href = '/case-studies'}>
             View Case Studies
           </VintageButton>
         </div>

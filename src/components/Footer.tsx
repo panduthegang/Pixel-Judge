@@ -14,10 +14,10 @@ export const Footer: React.FC = () => {
         <div>
           <h4 className="font-mono font-bold uppercase tracking-widest mb-6 text-vintage-gold text-xs">Sitemap</h4>
           <ul className="space-y-3 font-serif text-lg">
-            <li><a href="#" className="hover:text-vintage-gold transition-colors">Home</a></li>
+            <li><a href="/" className="hover:text-vintage-gold transition-colors">Home</a></li>
             <li><a href="#features" className="hover:text-vintage-gold transition-colors">Features</a></li>
+            <li><a href="/case-studies" className="hover:text-vintage-gold transition-colors">Case Studies</a></li>
             <li><a href="#testimonials" className="hover:text-vintage-gold transition-colors">Testimonials</a></li>
-            <li><a href="#" className="hover:text-vintage-gold transition-colors">Login</a></li>
           </ul>
         </div>
 
